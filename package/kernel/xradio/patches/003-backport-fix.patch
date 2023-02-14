@@ -1,0 +1,22 @@
+diff --git a/main.c b/main.c
+index d901341..c3bb375 100644
+--- a/main.c
++++ b/main.c
+@@ -502,7 +502,7 @@ int xradio_core_init(struct sdio_func* func)
+ 	int if_id;
+ 	struct ieee80211_hw *dev;
+ 	struct xradio_common *hw_priv;
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 13, 0)
++#if 1
+ 	unsigned char addr[ETH_ALEN];
+ #else
+ 	unsigned char randomaddr[ETH_ALEN];
+@@ -520,7 +520,7 @@ int xradio_core_init(struct sdio_func* func)
+ 	hw_priv->sdio_func = func;
+ 	sdio_set_drvdata(func, hw_priv);
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 13, 0)
++#if 1
+ 	// fill in mac addresses
+ 	if (hw_priv->pdev->of_node) {
+ 		err = of_get_mac_address(hw_priv->pdev->of_node, addr);

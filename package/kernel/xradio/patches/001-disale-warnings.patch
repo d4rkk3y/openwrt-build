@@ -1,0 +1,53 @@
+diff --git a/ap.c b/ap.c
+index 649d6bf..3a512d2 100644
+--- a/ap.c
++++ b/ap.c
+@@ -15,6 +15,8 @@
+ #include "bh.h"
+ #include "net/mac80211.h"
+ 
++#include <linux/version.h>
++
+ #define XRADIO_LINK_ID_GC_TIMEOUT        ((unsigned long)(10 * HZ))
+ #define XRADIO_ENABLE_ARP_FILTER_OFFLOAD  3
+ 
+diff --git a/bh.c b/bh.c
+index 592fad2..84b82a9 100644
+--- a/bh.c
++++ b/bh.c
+@@ -776,7 +776,7 @@ static int xradio_bh(void *arg)
+ 		} else if (!status) {
+ 			/* check if there is data waiting but we missed the interrupt*/
+ 			if (xradio_bh_rx_availlen(hw_priv) > 0) {
+-				dev_warn(hw_priv->pdev, "missed interrupt\n");
++				//dev_warn(hw_priv->pdev, "missed interrupt\n");
+ 				if(xradio_bh_exchange(hw_priv) < 0){
+ 					break;
+ 				}
+diff --git a/main.c b/main.c
+index 8c08175..d901341 100644
+--- a/main.c
++++ b/main.c
+@@ -162,7 +162,9 @@ static const struct ieee80211_ops xradio_ops = {
+ 	/* Intentionally not offloaded:					*/
+ 	/*.channel_switch	 = xradio_channel_switch,		*/
+ 	.remain_on_channel = xradio_remain_on_channel,
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 19, 0))
+ 	.cancel_remain_on_channel = xradio_cancel_remain_on_channel,
++#endif
+ };
+ 
+ 
+diff --git a/rx.c b/rx.c
+index 24be4f3..978c4ac 100644
+--- a/rx.c
++++ b/rx.c
+@@ -394,7 +394,7 @@ void xradio_rx_cb(struct xradio_vif *priv,
+ 		/* Double-check status with lock held */
+ 		if (entry->status == XRADIO_LINK_SOFT) {
+ 			skb_queue_tail(&entry->rx_queue, skb);
+-			dev_warn(priv->hw_priv->pdev, "***skb_queue_tail\n");
++			//dev_warn(priv->hw_priv->pdev, "***skb_queue_tail\n");
+ 		} else
+ 			ieee80211_rx_irqsafe(priv->hw, skb);
+ 		spin_unlock_bh(&priv->ps_state_lock);
